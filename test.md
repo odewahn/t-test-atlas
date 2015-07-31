@@ -2,7 +2,7 @@ In every data analysis, you have to string together many tools. You need tools f
 
 R, at its heart, is a functional programming language: you do data analysis in R by composing functions. However, the problem with function composition is that a lot of it makes for hard-to-read code. For example, here’s some R code that wrangles flight delay data from New York City in 2013\. What does it do?
 
-<pre data=executable="true">
+<pre data-executable="true">
 library(nycflights13)
 library(dplyr)
 
