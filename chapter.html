@@ -6,7 +6,6 @@
 <p>R, at its heart, is a functional programming language: you do data analysis in R by composing functions. However, the problem with function composition is that a lot of it makes for hard-to-read code. For example, here’s some R code that wrangles flight delay data from New York City in 2013. What does it do?</p>
 
 <pre data-code-language="r" data-executable="true">
-<code>
 library(nycflights13)
 library(dplyr)
  
@@ -26,7 +25,6 @@ head(
   ),
   5
 )
-</code>
 </pre>
 
 <p>It’s hard to read this code because:</p>
@@ -39,14 +37,12 @@ head(
 <p>We can make the code easier to read by using a new operator: <code>%&gt;%</code>, the pipe, provided by the <a href="https://github.com/smbache/magrittr">magrittr</a> package. It turns function composition into a sequence of imperative commands: “Start here, then do this, then do that, then do something else.” Here’s what the previous code looks like if we use <code>%&gt;%</code> (when reading, pronounce <code>%&gt;%</code> as “then”):</p>
 
 <pre data-code-language="r" data-executable="true">
-<code>
 flights %&gt;%
   filter(!is.na(dep_delay)) %&gt;%
   group_by(year, month, day) %&gt;%
   summarise(delay = mean(dep_delay)) %&gt;%
   arrange(desc(delay)) %&gt;%
   head(5)
-</code>
 </pre>
 
 <p>Even if you’ve never used R before, you should be able to make sense of this: we start with flights data, then remove all flights with missing departure delay. Next we group by date, and summarize to work out the average daily delay. Finally, we arrange in descending order of delay and look at the five worst delays. That shows us the worst day, by a substantial margin, was <a href="http://en.wikipedia.org/wiki/March_2013_nor%27easter">March 8</a>. This code does the same thing as the first snippet, but it’s much easier to read.</p>
