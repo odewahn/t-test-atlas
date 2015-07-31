@@ -2,7 +2,7 @@ In every data analysis, you have to string together many tools. You need tools f
 
 R, at its heart, is a functional programming language: you do data analysis in R by composing functions. However, the problem with function composition is that a lot of it makes for hard-to-read code. For example, here’s some R code that wrangles flight delay data from New York City in 2013\. What does it do?
 
-<pre data-code-language="python" data-executable="true" data-type="programlisting">
+<pre data-code-language="r" data-executable="true" data-type="programlisting">
 library(nycflights13)
 library(dplyr)
 
@@ -31,7 +31,7 @@ It’s hard to read this code because:
 
 We can make the code easier to read by using a new operator: `%>%`, the pipe, provided by the [magrittr](https://github.com/smbache/magrittr) package. It turns function composition into a sequence of imperative commands: “Start here, then do this, then do that, then do something else.” Here’s what the previous code looks like if we use `%>%` (when reading, pronounce `%>%` as “then”):
 
-<pre data-code-language="python" data-executable="true" data-type="programlisting">
+<pre data-code-language="r" data-executable="true" data-type="programlisting">
 flights %>%
   filter(!is.na(dep_delay)) %>%
   group_by(year, month, day) %>%
