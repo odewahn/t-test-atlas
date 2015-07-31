@@ -5,7 +5,7 @@
 
 <p>R, at its heart, is a functional programming language: you do data analysis in R by composing functions. However, the problem with function composition is that a lot of it makes for hard-to-read code. For example, here’s some R code that wrangles flight delay data from New York City in 2013. What does it do?</p>
 
-<pre data-code-language="r">
+<pre data-code-language="r" data-executable="true">
 <code>
 library(nycflights13)
 library(dplyr)
@@ -38,7 +38,7 @@ head(
 
 <p>We can make the code easier to read by using a new operator: <code>%&gt;%</code>, the pipe, provided by the <a href="https://github.com/smbache/magrittr">magrittr</a> package. It turns function composition into a sequence of imperative commands: “Start here, then do this, then do that, then do something else.” Here’s what the previous code looks like if we use <code>%&gt;%</code> (when reading, pronounce <code>%&gt;%</code> as “then”):</p>
 
-<pre data-code-language="r">
+<pre data-code-language="r" data-executable="true">
 <code>
 flights %&gt;%
   filter(!is.na(dep_delay)) %&gt;%
@@ -46,15 +46,6 @@ flights %&gt;%
   summarise(delay = mean(dep_delay)) %&gt;%
   arrange(desc(delay)) %&gt;%
   head(5)
-#&gt; Source: local data frame [5 x 4]
-#&gt; Groups: year, month
-#&gt;
-#&gt;   year month day delay
-#&gt; 1 2013     3   8 83.54
-#&gt; 2 2013     7   1 56.23
-#&gt; 3 2013     9   2 53.03
-#&gt; 4 2013     7  10 52.86
-#&gt; 5 2013    12   5 52.33
 </code>
 </pre>
 
