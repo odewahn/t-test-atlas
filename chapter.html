@@ -1,5 +1,74 @@
-<section data-type="chapter">
-<h1>Chapter Title</h1>
+<section data-type="chapter" xmlns="http://www.w3.org/1999/xhtml">
+<h1>Data Pipelines with R</h1>
 
-<p>You wanted basic, so that's what you got. Here's our markup spec: <a href="https://github.com/oreillymedia/HTMLBook/blob/master/specification.asciidoc">github.com/oreillymedia/HTMLBook/blob/master/specification.asciidoc</a>. And here's how to add custom styles: <a href="http://atlasdocs.oreilly.com/ch07.html">atlasdocs.oreilly.com/ch07.html</a>. Bon courage, mes amis.</p>
+<p>In every data analysis, you have to string together many tools. You need tools for data wrangling, visualisation, and modelling to understand what’s going on in your data. To use these tools effectively, you need to be able to easily flow from one tool to the next, focusing on asking and answering questions of the data, not struggling to jam the output from one function into the format needed for the next. Wouldn’t it be nice if the world worked this way! I spend a lot of my time thinking about this problem, and how to make the process of data analysis as fast, effective, and expressive as possible. Today, I want to show you a new technique that I’m particularly excited about.</p>
+
+<p>R, at its heart, is a functional programming language: you do data analysis in R by composing functions. However, the problem with function composition is that a lot of it makes for hard-to-read code. For example, here’s some R code that wrangles flight delay data from New York City in 2013. What does it do?</p>
+
+<pre data-code-language="r">
+<code>
+library(nycflights13)
+library(dplyr)
+ 
+head(
+  arrange(
+    summarise(
+      group_by(
+        filter(
+          flights,
+          !is.na(dep_delay)
+        ),
+        year, month, day
+      ),
+      delay = mean(dep_delay)
+    ),
+    desc(delay)
+  ),
+  5
+)
+</code>
+</pre>
+
+<p>It’s hard to read this code because:</p>
+
+<ol>
+	<li>The innermost operation is performed first, so to read the operations in sequence you have to read from inside-out, from right-to-left.</li>
+	<li>Function arguments become increasingly spread apart (this is known as the <a href="http://en.wikipedia.org/wiki/Dagwood_sandwich">Dagwood sandwich</a> problem).</li>
+</ol>
+
+<p>We can make the code easier to read by using a new operator: <code>%&gt;%</code>, the pipe, provided by the <a href="https://github.com/smbache/magrittr">magrittr</a> package. It turns function composition into a sequence of imperative commands: “Start here, then do this, then do that, then do something else.” Here’s what the previous code looks like if we use <code>%&gt;%</code> (when reading, pronounce <code>%&gt;%</code> as “then”):</p>
+
+<pre data-code-language="r">
+<code>
+flights %&gt;%
+  filter(!is.na(dep_delay)) %&gt;%
+  group_by(year, month, day) %&gt;%
+  summarise(delay = mean(dep_delay)) %&gt;%
+  arrange(desc(delay)) %&gt;%
+  head(5)
+#&gt; Source: local data frame [5 x 4]
+#&gt; Groups: year, month
+#&gt;
+#&gt;   year month day delay
+#&gt; 1 2013     3   8 83.54
+#&gt; 2 2013     7   1 56.23
+#&gt; 3 2013     9   2 53.03
+#&gt; 4 2013     7  10 52.86
+#&gt; 5 2013    12   5 52.33
+</code>
+</pre>
+
+<p>Even if you’ve never used R before, you should be able to make sense of this: we start with flights data, then remove all flights with missing departure delay. Next we group by date, and summarize to work out the average daily delay. Finally, we arrange in descending order of delay and look at the five worst delays. That shows us the worst day, by a substantial margin, was <a href="http://en.wikipedia.org/wiki/March_2013_nor%27easter">March 8</a>. This code does the same thing as the first snippet, but it’s much easier to read.</p>
+
+<p><code>%&gt;%</code> has analogues in many other languages: it’s similar to the pipe operator in F#, method chaining in JS and python, clojure’s thread-first macro, and Haskell’s <code>-&gt;</code>. It’s certainly not a new idea, but the implementation in R is novel, and it’s a very powerful idea. It’s really transformed the way that I code new data analyses.</p>
+
+<p>It’s easy to write functions that work in a pipeline. A function only needs to adhere to a simple contract: the first argument should be the same type of thing as the last argument. This makes it easy to write pipelines for different types of object. You’ll learn more about different types of pipelines during <a href="http://strataconf.com/stratany2014/public/schedule/detail/37037">R day</a> at <a href="http://strataconf.com/stratany2014">Strata + Hadoop World</a> in October, including:</p>
+
+<ul>
+	<li><a href="http://blog.rstudio.org/2014/07/22/introducing-tidyr/">tidyr</a>, pipelines to convert messy data into tidy (normalised) data that’s easy to wrangle, visualise and model.</li>
+	<li><a href="http://blog.rstudio.org/2014/01/17/introducing-dplyr/">dplyr</a>, pipelines for data wrangling that work not just with in-memory data, but also with remote data stores, like databases and Google’s BigQuery.</li>
+	<li><a href="http://blog.rstudio.org/2014/06/23/introducing-ggvis/">ggvis</a>, pipelines that let you create complex, powerful visualisations by starting simple and building your way up.</li>
+</ul>
+
+<p>Data analysis doesn’t occur in a vacuum, so it’s crucial to be able get your work out of R and into the hands of decision makers. For that reason, we’ll also show you how to intermingle code and text into static reports with <a href="http://rmarkdown.rstudio.com/">rmarkdown</a>, and how to create engaging analytic experiences with <a href="http://shiny.rstudio.com/">shiny</a>. You’ll also learn about <a href="http://rstudio.github.io/packrat/">packrat</a>. Have you ever upgraded a package so you could use the latest and greatest feature, and then cursed when it broke old code in another project? Packrat solves that problem by managing an independent set of packages for each project.</p>
 </section>
