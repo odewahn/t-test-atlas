@@ -29,7 +29,11 @@
       "toc": false,
       "syntaxhighlighting": false,
       "show_comments": false,
-      "consolidated": false
+      "consolidated": false,
+      "javascripts": [
+        "thebe.js",
+        "https://d3ansictanv2wj.cloudfront.net/main-built-f2501cbe.js"
+      ]
     }
   },
   "theme": "",
