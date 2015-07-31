@@ -31,25 +31,14 @@ It’s hard to read this code because:
 
 We can make the code easier to read by using a new operator: `%>%`, the pipe, provided by the [magrittr](https://github.com/smbache/magrittr) package. It turns function composition into a sequence of imperative commands: “Start here, then do this, then do that, then do something else.” Here’s what the previous code looks like if we use `%>%` (when reading, pronounce `%>%` as “then”):
 
-```
-
+<pre data-executable="true">
 flights %>%
   filter(!is.na(dep_delay)) %>%
   group_by(year, month, day) %>%
   summarise(delay = mean(dep_delay)) %>%
   arrange(desc(delay)) %>%
   head(5)
-#> Source: local data frame [5 x 4]
-#> Groups: year, month
-#>
-#>   year month day delay
-#> 1 2013     3   8 83.54
-#> 2 2013     7   1 56.23
-#> 3 2013     9   2 53.03
-#> 4 2013     7  10 52.86
-#> 5 2013    12   5 52.33
-
-```
+</pre>
 
 Even if you’ve never used R before, you should be able to make sense of this: we start with flights data, then remove all flights with missing departure delay. Next we group by date, and summarize to work out the average daily delay. Finally, we arrange in descending order of delay and look at the five worst delays. That shows us the worst day, by a substantial margin, was [March 8](http://en.wikipedia.org/wiki/March_2013_nor%27easter). This code does the same thing as the first snippet, but it’s much easier to read.
 
